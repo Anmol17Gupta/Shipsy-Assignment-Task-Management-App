@@ -28,7 +28,7 @@ class TaskServiceTest {
 
     @Test
     void testCreateTask_ShouldSaveTask() {
-        Task task = new Task();
+        Task task = Mockito.spy(new Task());  // Changed to spy
         doNothing().when(task).calculateTotalTime();
 
         when(taskRepository.save(task)).thenReturn(task);
@@ -76,7 +76,7 @@ class TaskServiceTest {
     @Test
     void testUpdateTask_WhenTaskExists_ShouldUpdateAndReturnTask() {
         Long taskId = 1L;
-        Task existingTask = new Task();
+        Task existingTask = Mockito.spy(new Task());  // Changed to spy
         existingTask.setTitle("Old Title");
         existingTask.setPriority("LOW");
         existingTask.setCompleted(false);
