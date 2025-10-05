@@ -6,3 +6,6 @@
 
 # Ignore Maven build output
 backend/target/
+
+#Ignore Node Modules for UI
+node_modules/
