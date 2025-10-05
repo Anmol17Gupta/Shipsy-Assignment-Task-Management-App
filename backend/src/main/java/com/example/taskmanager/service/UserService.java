@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
 
     public boolean validateUser(String username, String password) {
+        if (username == null || password == null) {
+            return false;
+        }
         return userRepository.validateUser(username, password);
     }
 }

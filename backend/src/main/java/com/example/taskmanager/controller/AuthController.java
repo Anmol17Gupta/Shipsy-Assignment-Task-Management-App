@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
+
     @Autowired
     private UserService userService;
 
@@ -18,10 +20,14 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> body, HttpSession session) {
         String username = body.get("username");
         String password = body.get("password");
+
         if (userService.validateUser(username, password)) {
+            String token = UUID.randomUUID().toString(); // Generate a simple token
             session.setAttribute("user", username);
-            return ResponseEntity.ok(Map.of("login", "success"));
+            session.setAttribute("token", token);
+            return ResponseEntity.ok(Map.of("token", token));
         }
+
         return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
     }
 

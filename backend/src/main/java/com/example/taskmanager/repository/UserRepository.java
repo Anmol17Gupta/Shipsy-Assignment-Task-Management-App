@@ -14,6 +14,8 @@ public class UserRepository {
     }
 
     public boolean validateUser(String username, String password) {
-        return password.equals(users.get(username));
-    }
+    String storedPass = users.get(username);
+    return storedPass != null && storedPass.equals(password);
+}
+
 }

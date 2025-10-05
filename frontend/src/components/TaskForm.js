@@ -6,21 +6,30 @@ export default function TaskForm({ existing, onDone }) {
     title: "",
     priority: "Low",
     completed: false,
-    estimated_time: "",
-    actual_time: ""
+    estimatedTime: "",
+    actualTime: ""
   });
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
-    setForm(f => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    setForm(f => ({ 
+      ...f, 
+      [name]: type === "checkbox" ? checked : value 
+    }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // convert number fields to correct type
+    const payload = {
+      ...form,
+      estimatedTime: parseFloat(form.estimatedTime) || 0,
+      actualTime: parseFloat(form.actualTime) || 0
+    };
     if (existing) {
-      await updateTask(existing.id, form);
+      await updateTask(existing.id, payload);
     } else {
-      await createTask(form);
+      await createTask(payload);
     }
     onDone();
   }
@@ -36,8 +45,8 @@ export default function TaskForm({ existing, onDone }) {
       <label>
         Completed <input type="checkbox" name="completed" checked={form.completed} onChange={handleChange} />
       </label>
-      <input name="estimated_time" type="number" value={form.estimated_time} onChange={handleChange} placeholder="Estimated" required />
-      <input name="actual_time" type="number" value={form.actual_time} onChange={handleChange} placeholder="Actual" required />
+      <input name="estimatedTime" type="number" value={form.estimatedTime} onChange={handleChange} placeholder="Estimated" required />
+      <input name="actualTime" type="number" value={form.actualTime} onChange={handleChange} placeholder="Actual" required />
       <button type="submit">{existing ? "Update" : "Create"} Task</button>
     </form>
   );
