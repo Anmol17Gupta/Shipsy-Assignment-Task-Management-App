@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from "react";
 import {
   loginUser,
@@ -23,8 +24,24 @@ const Login = ({ onLogin, error }) => {
       <form onSubmit={handleSubmit}>
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
-        <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+        <label htmlFor="username-input">Username</label>
+        <input
+          id="username-input"
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          required
+        />
+        <label htmlFor="password-input">Password</label>
+        <input
+          id="password-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
     </div>
@@ -47,19 +64,28 @@ const TaskForm = ({ onAddTask }) => {
 
   return (
     <form onSubmit={handleSubmit} className="task-form">
-      <input type="text" placeholder="New task title..." value={title} onChange={e => setTitle(e.target.value)} />
+      <input
+        type="text"
+        placeholder="New task title..."
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+      />
       <select value={priority} onChange={e => setPriority(e.target.value)}>
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
       </select>
-      <input type="number" min="0" value={estimatedTime} onChange={e => setEstimatedTime(parseFloat(e.target.value))} />
-      <button type="submit">Add Task</button>
+      <input
+        type="number"
+        min="0"
+        value={estimatedTime}
+        onChange={e => setEstimatedTime(parseFloat(e.target.value))}
+      />
+      <button type="submit">Create Task</button>
     </form>
   );
 };
 
-// Only map if tasks as an array. Otherwise, show error.
 const TaskList = ({ tasks, onUpdateTask, onDeleteTask }) => (
   <ul className="task-list">
     {Array.isArray(tasks)
