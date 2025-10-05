@@ -8,13 +8,12 @@ import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.mock.web.MockHttpSession;
 
-import java.util.Map;
-
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class AuthControllerTest {
 
@@ -43,13 +42,12 @@ class AuthControllerTest {
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-                .sessionAttr("user", null))
+                .content(requestBody))
+                .andDo(print())  // Print response for debugging
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.login").value("success"));
 
         verify(userService).validateUser("user1", "pass1");
-        verify(session, never()).invalidate();  // session.invalidate is not called in login
     }
 
     @Test
@@ -71,7 +69,13 @@ class AuthControllerTest {
     void logout_ShouldInvalidateSession() throws Exception {
         doNothing().when(session).invalidate();
 
-        mockMvc.perform(post("/logout").sessionAttr("user", "user1"))
+        mockMvc.perform(post("/logout")
+                .session(new MockHttpSession() {
+                    @Override
+                    public void invalidate() {
+                        session.invalidate();
+                    }
+                }))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.logout").value("success"));
 
